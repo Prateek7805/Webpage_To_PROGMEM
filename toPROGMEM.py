@@ -16,8 +16,9 @@ if __name__ == "__main__":
     # init
     for file in files:
         if os.path.isfile(file):
-            if file[file.rindex('.'):]:
-                temp[file[: file.rindex(".")]] = ""
+            if file.find('.') != -1:
+                if file[file.rindex('.'):]:
+                    temp[file[: file.rindex(".")]] = ""
 
     while(1):
         sleep(1)  # Delay
@@ -25,34 +26,35 @@ if __name__ == "__main__":
         for file in files:
             if os.path.isfile(file):
                 # check if the file is html, css, or js
-                if file[file.rindex('.'):] in validFormats:
-                    ext = file[file.rindex('.'):]  # file extension
-                    fileName = file[: file.rindex(".")]  # fileName
-                    # form variable name
-                    header = f"const char _{fileName}[] PROGMEM = R\"=====("
-                    filePoint = open(file, 'r')
-                    content = filePoint.read()  # get file content
-                    filePoint.close()
-                    # check if it is same as the previous file
-                    if(content == temp[fileName]):
-                        continue
+                if file.find('.') != -1:
+                    if file[file.rindex('.'):] in validFormats:
+                        ext = file[file.rindex('.'):]  # file extension
+                        fileName = file[: file.rindex(".")]  # fileName
+                        # form variable name
+                        header = f"const char _{fileName}[] PROGMEM = R\"=====("
+                        filePoint = open(file, 'r')
+                        content = filePoint.read()  # get file content
+                        filePoint.close()
+                        # check if it is same as the previous file
+                        if(content == temp[fileName]):
+                            continue
 
-                    temp[fileName] = content  # update content
-                    data = {'input': content}  # request
-                    url = urlDict.get(ext)  # url
-                    try:
-                        data = requests.post(
-                            url, data=data).text  # response
-                    except:
-                        data = content
-                        print(f"{file} minification failed")
+                        temp[fileName] = content  # update content
+                        data = {'input': content}  # request
+                        url = urlDict.get(ext)  # url
+                        try:
+                            data = requests.post(
+                                url, data=data).text  # response
+                        except:
+                            data = content
+                            print(f"{file} minification failed")
 
-                    fileContent = header + "\n" + data + "\n" + trailer  # header file formatting
+                        fileContent = header + "\n" + data + "\n" + trailer  # header file formatting
 
-                    filePoint = open(fileName+".h", "w")
-                    filePoint.write(fileContent)
-                    filePoint.close()
+                        filePoint = open(fileName+".h", "w")
+                        filePoint.write(fileContent)
+                        filePoint.close()
 
-                    # get the date and format conversion
-                    dateNow = date.now().strftime("%H:%M:%S %d-%m-%Y")
-                    print(f"{file} changed at {dateNow}")
+                        # get the date and format conversion
+                        dateNow = date.now().strftime("%H:%M:%S %d-%m-%Y")
+                        print(f"{file} changed at {dateNow}")
