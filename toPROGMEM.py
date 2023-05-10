@@ -3,8 +3,8 @@ import requests
 from time import sleep
 from datetime import datetime as date
 if __name__ == "__main__":
-    urlDict = {'.html': 'https://www.toptal.com/developers/html-minifier/raw',
-               '.htm': 'https://www.toptal.com/developers/html-minifier/raw',
+    urlDict = {'.html': 'https://www.toptal.com/developers/html-minifier/api/raw',
+               '.htm': 'https://www.toptal.com/developers/html-minifier/api/raw',
                '.css': 'https://www.toptal.com/developers/cssminifier/raw',
                '.js': 'https://www.toptal.com/developers/javascript-minifier/raw'}
 
